@@ -20,25 +20,26 @@ browser_1 = webdriver.Chrome(executable_path=driver_path)
 browser_2 = webdriver.Chrome(executable_path=driver_path)
 
 # 计数count，计算一共插入多少个author了(开始的专家id）
-count = 38000
+count = 194115
 # 初始化浏览器，让他登陆和最大化，不然无法捕获所有元素
 # browser.maximize_window()
 browser_1.maximize_window()
 browser_2.maximize_window()
-browser_2.get('https://www.aminer.cn/login?callback=profile%2Fthomas-s-huang%2F53f48abedabfaea6fb77b490')
-time.sleep(3)
-phonebtn=browser_2.find_element_by_xpath('/html/body/div/section/main/main/article/section/div[1]/div[2]/div/div[1]/div/div/div/div/div[1]/div[2]')
-phonebtn.click()
-username = browser_2.find_element_by_id('userPhone')
-username.clear()
-username.send_keys('18347989110')
-password = browser_2.find_element_by_id('phonePassword')
-password.clear()
-password.send_keys('aminer9110')
-loginbtn = browser_2.find_element_by_xpath(
-    '/html/body/div/section/main/main/article/section/div[1]/div[2]/div/div[3]/div[2]/form/div/div[5]/div/div/span/button')
-loginbtn.click()
-time.sleep(3)
+
+# browser_2.get('https://www.aminer.cn/login?callback=profile%2Fthomas-s-huang%2F53f48abedabfaea6fb77b490')
+# time.sleep(3)
+# phonebtn=browser_2.find_element_by_xpath('/html/body/div/section/main/main/article/section/div[1]/div[2]/div/div[1]/div/div/div/div/div[1]/div[2]')
+# phonebtn.click()
+# username = browser_2.find_element_by_id('userPhone')
+# username.clear()
+# username.send_keys('18347989110')
+# password = browser_2.find_element_by_id('phonePassword')
+# password.clear()
+# password.send_keys('aminer9110')
+# loginbtn = browser_2.find_element_by_xpath(
+#     '/html/body/div/section/main/main/article/section/div[1]/div[2]/div/div[3]/div[2]/form/div/div[5]/div/div/span/button')
+# loginbtn.click()
+time.sleep(2)
 
 
 class Author:
@@ -55,7 +56,6 @@ class Author:
     def print(self):
         print(self.name, self.title, self.department, self.homepage, self.papers, self.citation, self.hindex,
               self.interests)
-
 
 def insert_mysql(author, discipline, disciplineid):
     # 初始化connection
@@ -91,21 +91,33 @@ def insert_mysql(author, discipline, disciplineid):
     connection.commit()
 
 
+
 # 抓取【个人主页】的详细信息
 def author_info_scratch(url, discipline, disciplineid):
     browser_2.get(url)
-    # time.sleep(3)
+    time.sleep(2)
+    # handle = browser_2.current_window_handle
+    handles = browser_2.window_handles
+    handle=handles[0]
+    for newhandle in handles:
+        if newhandle != handle:
+            browser_2.switch_to.window(newhandle)
+            browser_2.close()
+    browser_2.switch_to.window(handle)
+
+
 
     # 作者的各项资料
     try:
 
         name = WebDriverWait(browser_2, 30).until(EC.presence_of_element_located(
             (By.XPATH,
-             '//*[@id="menu_base_info"]/article/div/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/h1'))).text
+             '//*[@id="market_content"]/div/div/div/div[1]/div[1]/div/div/div[2]/div[1]/h1/span'))).text
         # ——————————————————————————————————————————————————————————————————————————————
         # name = browser_2.find_element_by_xpath(
         #     '/html/body/div/section/main/main/article/section[1]/section[1]/div[1]/div/div[2]/div[1]/h1/span').text
     except:
+        # return 0
         name = "no name"
 
     try:
@@ -114,7 +126,7 @@ def author_info_scratch(url, discipline, disciplineid):
         #      '/html/body/div/section/main/main/article/section[1]/section[1]/div[1]/div/div[2]/div[3]/div/div[1]/div[2]/p[1]/span'))).text
         # ——————————————————————————————————————————————————————————————————————————————
         title = browser_2.find_element_by_xpath(
-            '//*[@id="menu_base_info"]/article/div/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div/div[1]/div[1]/p/span').text
+            '//*[@id="market_content"]/div/div/div/div[1]/div[1]/div/div/div[2]/div[3]/div/div[1]/div[1]/div/span').text
     except:
         title = "no title"
 
@@ -124,7 +136,7 @@ def author_info_scratch(url, discipline, disciplineid):
         #      '/html/body/div/section/main/main/article/section[1]/section[1]/div[1]/div/div[2]/div[3]/div/div[1]/div[2]/p[2]/textarea'))).text
         # ——————————————————————————————————————————————————————————————————————————————
         department = browser_2.find_element_by_xpath(
-            '//*[@id="menu_base_info"]/article/div/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div/div[1]/div[2]/p/span').text
+            '//*[@id="market_content"]/div/div/div/div[1]/div[1]/div/div/div[2]/div[3]/div/div[1]/div[2]/div/span').text
     except:
         department = "no department"
 
@@ -146,7 +158,7 @@ def author_info_scratch(url, discipline, disciplineid):
         #     # print(h)
         # homepage = h
         # ——————————————————————————————————————————————————————————————————————————————
-        homepage=browser_2.find_element_by_xpath('//*[@id="menu_base_info"]/article/div/div/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div/div[1]/div[5]/p/a').text
+        homepage=browser_2.find_element_by_xpath('//*[@id="market_content"]/div/div/div/div[1]/div[1]/div/div/div[2]/div[3]/div/div[1]/div[4]/div/a').text
     except:
         homepage = "no homepage"
 
@@ -203,12 +215,13 @@ def author_info_scratch(url, discipline, disciplineid):
     author.print()
 
     insert_mysql(author, discipline, disciplineid)
+    return 1
 
 
 # 挨个点击【作者列表】，进入【个人主页】后调用author_info_scratch
 def author_list(url, discipline, disciplineid):
     browser_1.get(url)
-
+    time.sleep(2)
     pagenum = WebDriverWait(browser_1, 100).until(EC.presence_of_element_located((By.CLASS_NAME,'ant-pagination-simple-pager'))).text
     # pagenum = browser_1.find_element_by_xpath(
     #     '/html/body/div/section/main/main/article/div[2]/div[3]/div[1]/div[2]/div[1]/div[3]/div[2]/div[2]/ul/li[2]').text
@@ -226,10 +239,16 @@ def author_list(url, discipline, disciplineid):
 
         for span in links:
             try:
-                author_info_scratch(span.get_attribute("href"), discipline, disciplineid)
+                count2=0
+                while(1):
+                    count2=count2+1
+                    if(count2>=2):
+                        print("现在在延迟")
+                    if(author_info_scratch(span.get_attribute("href"), discipline, disciplineid)==1):
+                        break
             except:
                 time.sleep(10)
-                print("数据延迟，等待10秒")
+                print("插入发生错误，延迟10秒")
 
         # 点击下一页
         next_bottom = browser_1.find_element_by_xpath(
@@ -245,8 +264,12 @@ print("开始干活咯")
 file = open('cardbox_urls.txt', 'r')
 count1=1
 links=file.readlines()
-for span in links:
-    author_list(span,"华人库","999")
+#441行尾号为96的2021页数据有误，到500页就出不来东西了
+#从0开始，意味着初始数目为n-1
+for span in range(594,604):
+#     print(links[span])
+# for span in links:
+    author_list(links[span],"华人库","999")
     print("爬完一个cardbox拉,现在的cardbox编号为:",count1)
     count1=count1+1
 print("爬完所有cardbox拉")
