@@ -8,7 +8,7 @@ import requests
 import json
 
 
-count=0
+count=1000
 class index_Author:
     def __init__(self, name, id, discipline, disciplineid, domain):
         self.name = name
@@ -35,13 +35,13 @@ def insert_index_Author(author):
     count = count + 1
 
     sql = ''
-    sql = "INSERT INTO index_people (ordernum,name,id,discipline,disciplineid,domain) VALUES (%s,%s,%s,%s,%s,%s) "
+    sql = "INSERT INTO index_author (ordernum,name,id,discipline,disciplineid,domain) VALUES (%s,%s,%s,%s,%s,%s) "
     val = [count, author.name, author.id, author.discipline, author.disciplineid, author.domain]
 
     try:
         cursor.execute(sql, val)
     except:
-        sql2 = "INSERT INTO index_people (ordernum,name,id,discipline,disciplineid,domain) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) "
+        sql2 = "INSERT INTO index_author (ordernum,name,id,discipline,disciplineid,domain) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) "
         val2 = [999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999]
         cursor.execute(sql2, val2)
 
@@ -62,7 +62,7 @@ def get_People_Info(homepagerurl,discipline,disciplineid,domain):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36"}
 
     # //json.loads 是将json字符串（str类型）转化为字典(python格式）
-    payload=json.loads('[{"action":"searchapi.SearchPerson","parameters":{"offset":0,"size":20000,"query":"","include":["agg","intelli","topics"],"domains":["'+domain+'"]},"schema":{"person":["id","name","name_zh","avatar","tags","is_follow","num_view","num_follow","is_upvoted","num_upvoted","is_downvoted","bind",{"profile":["position","position_zh","affiliation","affiliation_zh","org"]},{"indices":["hindex","gindex","pubs","citations","newStar","risingStar","activity","diversity","sociability"]},"tags_translated_zh"]}}]')
+    payload=json.loads('[{"action":"searchapi.SearchPerson","parameters":{"offset":0,"size":20000,"query":"","include":["agg","intelli","topics"],"domains":["' + str(domain) + '"]},"schema":{"person":["id","name","name_zh","avatar","tags","is_follow","num_view","num_follow","is_upvoted","num_upvoted","is_downvoted","bind",{"profile":["position","position_zh","affiliation","affiliation_zh","org"]},{"indices":["hindex","gindex","pubs","citations","newStar","risingStar","activity","diversity","sociability"]},"tags_translated_zh"]}}]')
 
 
     # //json.loads 是将json字符串（str类型）转化为字典(python格式）
@@ -86,7 +86,7 @@ def get_People_Info(homepagerurl,discipline,disciplineid,domain):
 
 
 Disciplines = [
-    ["https://www.aminer.cn/search/person?domain=143&t=b", "计算机科学", 1,142],
+    ["https://www.aminer.cn/search/person?domain=143&t=b", "计算机科学", 1,143],
     ["https://www.aminer.cn/search/person?domain=122&q=&t=b", "通信与信息科学", 2,122],
     ["https://www.aminer.cn/search/person?domain=102&q=&t=b", "数学", 3,102],
     ["https://www.aminer.cn/search/person?domain=103&q=&t=b", "物理学", 4,103],
@@ -126,7 +126,7 @@ Disciplines = [
     ["https://www.aminer.cn/search/person?domain=112&q=&t=b", "体育学", 38,112],
     ["https://www.aminer.cn/search/person?domain=118&q=&t=b", "历史学", 39,118]]
 
-for i in range(0, 39):#第一层遍历，所有的学科
+for i in range(1, 39):#第一层遍历，所有的学科
     get_People_Info(Disciplines[i][0], Disciplines[i][1], Disciplines[i][2],Disciplines[i][3])#第二层遍历，每个学科下面的每个专家
 
 print("所有的都执行完毕啦~")
