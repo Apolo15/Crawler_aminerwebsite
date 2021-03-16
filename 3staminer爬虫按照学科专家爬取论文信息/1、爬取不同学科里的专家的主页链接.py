@@ -1,9 +1,4 @@
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import pymysql.cursors
-from selenium import webdriver  # 导入必要的库
 import requests
 import json
 
@@ -62,7 +57,7 @@ def get_People_Info(homepagerurl,discipline,disciplineid,domain):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36"}
 
     # //json.loads 是将json字符串（str类型）转化为字典(python格式）
-    payload=json.loads('[{"action":"searchapi.SearchPerson","parameters":{"offset":0,"size":20000,"query":"","include":["agg","intelli","topics"],"domains":["'+domain+'"]},"schema":{"person":["id","name","name_zh","avatar","tags","is_follow","num_view","num_follow","is_upvoted","num_upvoted","is_downvoted","bind",{"profile":["position","position_zh","affiliation","affiliation_zh","org"]},{"indices":["hindex","gindex","pubs","citations","newStar","risingStar","activity","diversity","sociability"]},"tags_translated_zh"]}}]')
+    payload=json.loads('[{"action":"searchapi.SearchPerson","parameters":{"offset":0,"size":20000,"query":"","include":["agg","intelli","topics"],"domains":["'+str(domain)+'"]},"schema":{"person":["id","name","name_zh","avatar","tags","is_follow","num_view","num_follow","is_upvoted","num_upvoted","is_downvoted","bind",{"profile":["position","position_zh","affiliation","affiliation_zh","org"]},{"indices":["hindex","gindex","pubs","citations","newStar","risingStar","activity","diversity","sociability"]},"tags_translated_zh"]}}]')
 
 
     # //json.loads 是将json字符串（str类型）转化为字典(python格式）
