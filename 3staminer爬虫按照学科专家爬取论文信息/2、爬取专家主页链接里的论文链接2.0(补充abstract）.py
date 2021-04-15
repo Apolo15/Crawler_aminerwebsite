@@ -78,7 +78,7 @@ def get_perauthor_paperinfo(paper_id):
 
 
         try:
-            time.sleep(1)
+            # time.sleep(1)
             response = requests.get(url,headers=headers,timeout=(20,30))
 
         except:
@@ -141,7 +141,7 @@ def main():
     cursor = connection.cursor()
 
     # sql = "SELECT * FROM index_author  WHERE ordernum>'2206' "
-    sql = "SELECT * FROM aminer_person_paper_abstract"
+    sql = "SELECT * FROM aminer_person_paper_abstract WHERE ordernum>'88507'"
     cursor.execute(sql)
     results=cursor.fetchall()
     #row代表一个作者
@@ -152,7 +152,7 @@ def main():
 
 
 main()
-
+print("爬完啦")
 
 
 
